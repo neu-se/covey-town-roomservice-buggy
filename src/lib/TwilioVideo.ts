@@ -1,6 +1,5 @@
 import dotenv from 'dotenv';
 import Twilio from 'twilio';
-import assert from 'assert';
 import IVideoClient from './IVideoClient';
 
 dotenv.config();
@@ -31,17 +30,12 @@ export default class TwilioVideo implements IVideoClient {
 
   public static getInstance(): TwilioVideo {
     if (!TwilioVideo._instance) {
-      assert(process.env.TWILIO_API_AUTH_TOKEN,
-        'Environmental variable TWILIO_API_AUTH_TOKEN must be set');
-      assert(process.env.TWILIO_ACCOUNT_SID,
-        'Environmental variable TWILIO_ACCOUNT_SID must be set');
-      assert(process.env.TWILIO_API_KEY_SID,
-        'Environmental variable TWILIO_API_KEY_SID must be set');
-      assert(process.env.TWILIO_API_KEY_SECRET,
-        'Environmental variable TWILIO_API_KEY_SECRET must be set');
+      const twilioAccountSID = process.env.TWILIO_ACCOUNT_SID || 'ACdummy';
+      const twilioAPIAuthToken = process.env.TWILIO_API_AUTH_TOKEN || 'dummy';
+      const twilioAPIKeySID = process.env.TWILIO_API_KEY_SID || 'dummy';
+      const twilioAPIKeySecret = process.env.TWILIO_API_KEY_SECRET || 'dummy';
       TwilioVideo._instance = new TwilioVideo(
-        process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_API_AUTH_TOKEN,
-        process.env.TWILIO_API_KEY_SID, process.env.TWILIO_API_KEY_SECRET,
+        twilioAccountSID, twilioAPIAuthToken, twilioAPIKeySID, twilioAPIKeySecret,
       );
     }
     return TwilioVideo._instance;
