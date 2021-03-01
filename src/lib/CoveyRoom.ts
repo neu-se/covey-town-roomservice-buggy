@@ -73,10 +73,12 @@ export class CoveyRoom {
     return CoveyRoom._instances
       .filter((r) => r._isPubliclyListed)
       .map(
-        ({ coveyRoomID, friendlyName , occupancy}) =>
-          ({ coveyRoomID, friendlyName ,
+        ({ coveyRoomID, friendlyName, occupancy }) =>
+          ({
+            coveyRoomID, friendlyName,
             currentOccupancy: occupancy,
-            maximumOccupancy: 50}));
+            maximumOccupancy: 5,
+          }));
   }
 
   public update(coveyRoomPassword : string, friendlyName? : string, isPubliclyListed? : boolean) : boolean {
