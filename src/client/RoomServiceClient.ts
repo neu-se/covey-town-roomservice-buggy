@@ -32,22 +32,22 @@ export default class RoomServiceClient {
   }
 
   async createRoom(requestData: TownCreateRequest): Promise<TownCreateResponse> {
-    const responseWrapper = await this._axios.post<ResponseEnvelope<TownCreateResponse>>('/rooms', requestData);
+    const responseWrapper = await this._axios.post<ResponseEnvelope<TownCreateResponse>>('/towns', requestData);
     return RoomServiceClient.unwrapOrThrowError(responseWrapper);
   }
 
   async updateRoom(requestData: TownUpdateRequest): Promise<void> {
-    const responseWrapper = await this._axios.patch<ResponseEnvelope<void>>(`/rooms/${requestData.coveyRoomID}`, requestData);
+    const responseWrapper = await this._axios.patch<ResponseEnvelope<void>>(`/towns/${requestData.coveyRoomID}`, requestData);
     RoomServiceClient.unwrapOrThrowError(responseWrapper, true);
   }
 
   async deleteRoom(requestData: TownDeleteRequest): Promise<void> {
-    const responseWrapper = await this._axios.delete<ResponseEnvelope<void>>(`/rooms/${requestData.coveyRoomID}/${requestData.coveyRoomPassword}`);
+    const responseWrapper = await this._axios.delete<ResponseEnvelope<void>>(`/towns/${requestData.coveyRoomID}/${requestData.coveyRoomPassword}`);
     RoomServiceClient.unwrapOrThrowError(responseWrapper, true);
   }
 
   async listRooms(): Promise<TownListResponse> {
-    const responseWrapper = await this._axios.get<ResponseEnvelope<TownListResponse>>('/rooms');
+    const responseWrapper = await this._axios.get<ResponseEnvelope<TownListResponse>>('/towns');
     return RoomServiceClient.unwrapOrThrowError(responseWrapper);
   }
 
