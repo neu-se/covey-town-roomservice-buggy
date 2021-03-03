@@ -1,8 +1,8 @@
 import assert from 'assert';
-import { Socket } from 'socket.io';
+import {Socket} from 'socket.io';
 import Player from '../types/Player';
-import { CoveyRoomList } from '../CoveyTypes';
-import { CoveyRoom } from '../lib/CoveyRoom';
+import {CoveyRoomList} from '../CoveyTypes';
+import {CoveyRoom} from '../lib/CoveyRoom';
 
 /**
  * The format of a request to join a town in Covey.Town, as dispatched by the server middleware
@@ -11,7 +11,7 @@ export interface TownJoinRequest {
   /** userName of the player that would like to join * */
   userName: string;
   /** ID of the room that the player would like to join * */
-  coveyRoomID: string;
+  coveyTownID: string;
 }
 
 /**
@@ -47,23 +47,23 @@ export interface TownCreateRequest {
  * Response from the server for a room create request
  */
 export interface TownCreateResponse {
-  coveyRoomID: string;
-  coveyRoomPassword: string;
+  coveyTownID: string;
+  coveyTownPassword: string;
 }
 
 /**
  * Response from the server for a room list request
  */
 export interface TownListResponse {
-  rooms: CoveyRoomList;
+  towns: CoveyRoomList;
 }
 
 /**
  * Payload sent by the client to delete a room
  */
 export interface TownDeleteRequest {
-  coveyRoomID: string;
-  coveyRoomPassword: string;
+  coveyTownID: string;
+  coveyTownPassword: string;
 }
 
 /**
@@ -72,8 +72,8 @@ export interface TownDeleteRequest {
  * if(!isPubliclyListed) -> evaluates to true if the value is false OR undefined, use ===
  */
 export interface TownUpdateRequest {
-  coveyRoomID: string;
-  coveyRoomPassword: string;
+  coveyTownID: string;
+  coveyTownPassword: string;
   friendlyName?: string;
   isPubliclyListed?: boolean;
 }
@@ -96,7 +96,7 @@ export interface ResponseEnvelope<T> {
  * @param requestData an object representing the player's request
  */
 export async function roomJoinHandler(requestData: TownJoinRequest): Promise<ResponseEnvelope<TownJoinResponse>> {
-  const room = CoveyRoom.findInstance(requestData.coveyRoomID);
+  const room = CoveyRoom.findInstance(requestData.coveyTownID);
   if (!room) {
     return {
       isOK: false,
@@ -123,7 +123,7 @@ export async function roomJoinHandler(requestData: TownJoinRequest): Promise<Res
 export async function roomListHandler(): Promise<ResponseEnvelope<TownListResponse>> {
   return {
     isOK: true,
-    response: { rooms: CoveyRoom.listRooms() },
+    response: { towns: CoveyRoom.listRooms() },
   };
 }
 
@@ -142,14 +142,14 @@ export async function roomCreateHandler(requestData: TownCreateRequest): Promise
 }
 
 export async function roomDeleteHandler(requestData: TownDeleteRequest): Promise<ResponseEnvelope<Record<string, null>>> {
-  const room = CoveyRoom.findInstance(requestData.coveyRoomID);
+  const room = CoveyRoom.findInstance(requestData.coveyTownID);
   if (!room) {
     return {
       isOK : false,
       message : 'No such room',
     };
   }
-  const success = room.delete(requestData.coveyRoomPassword);
+  const success = room.delete(requestData.coveyTownPassword);
   return {
     isOK: success,
     response: {},
@@ -157,16 +157,17 @@ export async function roomDeleteHandler(requestData: TownDeleteRequest): Promise
 }
 
 export async function roomUpdateHandler(requestData: TownUpdateRequest): Promise<ResponseEnvelope<Record<string, null>>> {
-  const room = CoveyRoom.findInstance(requestData.coveyRoomID);
+  const room = CoveyRoom.findInstance(requestData.coveyTownID);
   if (!room) {
     return {
       isOK : false,
       message : 'No such room',
     };
   }
-  const success = room.update(requestData.coveyRoomPassword, requestData.friendlyName, requestData.isPubliclyListed);
+  const success = room.update(requestData.coveyTownPassword, requestData.friendlyName, requestData.isPubliclyListed);
   return {
     isOK: success,
+    message: (success ? undefined : 'Invalid password.'),
     response: {},
   };
 }

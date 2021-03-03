@@ -1,17 +1,36 @@
 import Express from 'express';
 import CORS from 'cors';
 import http from 'http';
-import { AddressInfo } from 'net';
+import {AddressInfo} from 'net';
 
 import addRoomRoutes from '../router/towns';
 import RoomServiceClient from './RoomServiceClient';
-import { ConfigureTest, StartTest } from '../FaultManager';
+import {ConfigureTest, StartTest} from '../FaultManager';
 
 describe('RoomServiceApiREST', () => {
   /* A testing server that will be deployed before testing and reused throughout all of the tests */
   let server: http.Server;
   /* A testing client that will be automatically configured with a serviceURL to point to the testing server */
   let apiClient: RoomServiceClient;
+  it('Changing public room to private room', async () => {
+    // const rooms = await apiClient.listRooms();
+    // console.log(rooms);
+    const newRoom = await apiClient.createRoom({isPubliclyListed: true, friendlyName: 'test'});
+    const updateResult = await apiClient.updateRoom({
+      isPubliclyListed: false,
+      coveyTownPassword: newRoom.coveyTownPassword,
+      coveyTownID: newRoom.coveyTownID,
+    });
+    console.log(updateResult); // valid password, it worked!
+
+  });
+
+  it('Mismatch of joined users', async () => {
+    const newRoom = await apiClient.createRoom({isPubliclyListed: true, friendlyName: 'test'});
+    // for (let i = 0; i < 5; i += 1) {
+    //   await apiClient.joinRoom({userName: })
+    // }
+  })
 
   beforeAll(async () => {
     // Deploy a testing server
@@ -35,7 +54,7 @@ describe('RoomServiceApiREST', () => {
       StartTest(testConfiguration);
       // Example demonstrating how to call the API client and wait for its result.
       // Feel free to delete this when you start to implement these tests.
-      await apiClient.createRoom({ friendlyName: 'testFriendlyName', isPubliclyListed: true });
+      await apiClient.createRoom({friendlyName: 'testFriendlyName', isPubliclyListed: true});
     });
     it.each(ConfigureTest('CR2'))('Prohibits a blank friendlyName [%s]', async (testConfiguration: string) => {
       StartTest(testConfiguration);

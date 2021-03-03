@@ -21,7 +21,7 @@ export default function addRoomRoutes(http: Server, app: Express): void {
     try {
       const result = await roomJoinHandler({
         userName: req.body.userName,
-        coveyRoomID: req.body.coveyRoomID,
+        coveyTownID: req.body.coveyTownID,
       });
       res.status(StatusCodes.OK)
         .json(result);
@@ -40,8 +40,8 @@ export default function addRoomRoutes(http: Server, app: Express): void {
   app.delete('/towns/:roomID/:roomPassword', BodyParser.json(), async (req, res) => {
     try {
       const result = await roomDeleteHandler({
-        coveyRoomID: req.params.roomID,
-        coveyRoomPassword: req.params.roomPassword,
+        coveyTownID: req.params.roomID,
+        coveyTownPassword: req.params.roomPassword,
       });
       res.status(200)
         .json(result);
@@ -93,10 +93,10 @@ export default function addRoomRoutes(http: Server, app: Express): void {
   app.patch('/towns/:roomID', BodyParser.json(), async (req, res) => {
     try {
       const result = await roomUpdateHandler({
-        coveyRoomID: req.params.roomID,
+        coveyTownID: req.params.roomID,
         isPubliclyListed: req.body.isPubliclyListed,
         friendlyName: req.body.friendlyName,
-        coveyRoomPassword: req.body.coveyRoomPassword,
+        coveyTownPassword: req.body.coveyTownPassword,
       });
       res.status(StatusCodes.OK)
         .json(result);

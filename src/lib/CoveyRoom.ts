@@ -6,8 +6,8 @@ import Player from '../types/Player';
 import PlayerSession from '../types/PlayerSession';
 import TwilioVideo from './TwilioVideo';
 
-export type CoveyRoomHandle = { coveyRoomID : string, coveyRoomPassword : string };
-export type CoveyRoomListing = { coveyRoomID : string, friendlyName : string };
+export type CoveyRoomHandle = { coveyTownID : string, coveyTownPassword : string };
+export type CoveyRoomListing = { coveyTownID : string, friendlyName : string };
 
 /**
  * An adapter between CoveyRoomController's event interface (CoveyRoomListener)
@@ -50,7 +50,7 @@ export class CoveyRoom {
   }
 
   public get occupancy(): number {
-    return this._listeners.length;
+    return this._sessions.length;
   }
 
   public get friendlyName(): string { return this._friendlyName; }
@@ -64,8 +64,8 @@ export class CoveyRoom {
   public static createHandle(friendlyName : string, isPubliclyListed : boolean) : CoveyRoomHandle {
     const room = new CoveyRoom(friendlyName, isPubliclyListed, nanoid(12), nanoid(24));
     return {
-      coveyRoomID : room.coveyRoomID,
-      coveyRoomPassword : room._coveyRoomPassword,
+      coveyTownID : room.coveyRoomID,
+      coveyTownPassword : room._coveyRoomPassword,
     };
   }
 
@@ -75,7 +75,7 @@ export class CoveyRoom {
       .map(
         ({ coveyRoomID, friendlyName, occupancy }) =>
           ({
-            coveyRoomID, friendlyName,
+            coveyTownID: coveyRoomID, friendlyName,
             currentOccupancy: occupancy,
             maximumOccupancy: 5,
           }));
@@ -113,8 +113,8 @@ export class CoveyRoom {
   }
 
   public static connect(socket : Socket) : void {
-    const { token:sessionToken, coveyRoomID } = socket.handshake.auth as { token: string; coveyRoomID: string };
-    const room = CoveyRoom.findInstance(coveyRoomID);
+    const { token:sessionToken, coveyTownID } = socket.handshake.auth as { token: string; coveyTownID: string };
+    const room = CoveyRoom.findInstance(coveyTownID);
     const session = room?._sessions.find((s) => s.sessionToken === sessionToken);
     if (!room || !session) {
       socket.disconnect(true);
@@ -137,6 +137,7 @@ export class CoveyRoom {
   }
 
   public disconnect(session : PlayerSession) : void {
+    console.log(`Disconnect: ${session.sessionToken}`);
     this._sessions = this._sessions.filter(s => s === session);
     this._listeners.map((l) => l.onPlayerDisconnected(session.player));
   }

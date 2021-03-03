@@ -37,12 +37,12 @@ export default class RoomServiceClient {
   }
 
   async updateRoom(requestData: TownUpdateRequest): Promise<void> {
-    const responseWrapper = await this._axios.patch<ResponseEnvelope<void>>(`/towns/${requestData.coveyRoomID}`, requestData);
+    const responseWrapper = await this._axios.patch<ResponseEnvelope<void>>(`/towns/${requestData.coveyTownID}`, requestData);
     RoomServiceClient.unwrapOrThrowError(responseWrapper, true);
   }
 
   async deleteRoom(requestData: TownDeleteRequest): Promise<void> {
-    const responseWrapper = await this._axios.delete<ResponseEnvelope<void>>(`/towns/${requestData.coveyRoomID}/${requestData.coveyRoomPassword}`);
+    const responseWrapper = await this._axios.delete<ResponseEnvelope<void>>(`/towns/${requestData.coveyTownID}/${requestData.coveyTownPassword}`);
     RoomServiceClient.unwrapOrThrowError(responseWrapper, true);
   }
 
