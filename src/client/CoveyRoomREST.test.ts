@@ -12,25 +12,6 @@ describe('RoomServiceApiREST', () => {
   let server: http.Server;
   /* A testing client that will be automatically configured with a serviceURL to point to the testing server */
   let apiClient: RoomServiceClient;
-  it('Changing public room to private room', async () => {
-    // const rooms = await apiClient.listRooms();
-    // console.log(rooms);
-    const newRoom = await apiClient.createRoom({isPubliclyListed: true, friendlyName: 'test'});
-    const updateResult = await apiClient.updateRoom({
-      isPubliclyListed: false,
-      coveyTownPassword: newRoom.coveyTownPassword,
-      coveyTownID: newRoom.coveyTownID,
-    });
-    console.log(updateResult); // valid password, it worked!
-
-  });
-
-  it('Mismatch of joined users', async () => {
-    const newRoom = await apiClient.createRoom({isPubliclyListed: true, friendlyName: 'test'});
-    // for (let i = 0; i < 5; i += 1) {
-    //   await apiClient.joinRoom({userName: })
-    // }
-  })
 
   beforeAll(async () => {
     // Deploy a testing server
