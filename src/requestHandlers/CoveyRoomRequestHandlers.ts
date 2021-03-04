@@ -167,7 +167,6 @@ export async function roomUpdateHandler(requestData: TownUpdateRequest): Promise
   const success = room.update(requestData.coveyTownPassword, requestData.friendlyName, requestData.isPubliclyListed);
   return {
     isOK: success,
-    message: (success ? undefined : 'Invalid password.'),
     response: {},
   };
 }
